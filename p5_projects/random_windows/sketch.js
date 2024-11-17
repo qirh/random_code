@@ -8,9 +8,6 @@ const COLORS = [
   "red",
   "purple",
   "pink",
-  "brown",
-  "white",
-  "gray",
   "cyan",
   "magenta",
   "lime",
@@ -22,10 +19,7 @@ const COLORS = [
   "maroon",
   "navy",
   "gold",
-  "silver",
   "lavender",
-  "peach",
-  "apricot",
   "mint",
   "coral",
   "salmon",
@@ -76,6 +70,7 @@ let colorCounter = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  noLoop();
 
   let xPointer = 0;
 
@@ -114,30 +109,40 @@ class Window {
     this.y = y;
     this.color = color;
     this.hasPerson = false;
+    this.needsRedraw = true;
   }
 
   display() {
-    fill(this.color);
-    stroke(0, 100);
-    strokeWeight(3);
+    if (this.needsRedraw) {
+      noStroke();
+      fill(this.color);
+      stroke(0, 100);
+      strokeWeight(3);
 
-    for (let i = 0; i < 4; i++) {
-      square(
-        (i % 2) * SIZE + this.x,
-        Math.floor(i / 2) * SIZE + this.y,
-        SIZE - GAP
-      );
-    }
-    if (this.hasPerson) {
-      fill("#393434");
-      ellipse(this.x + SIZE + 10, this.y + SIZE, 15, 20);
-      ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
+      for (let i = 0; i < 4; i++) {
+        square(
+          (i % 2) * SIZE + this.x,
+          Math.floor(i / 2) * SIZE + this.y,
+          SIZE - GAP
+        );
+      }
+
+      if (this.hasPerson) {
+        fill("#393434");
+        ellipse(this.x + SIZE + 10, this.y + SIZE, 15, 20);
+        ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
+      }
+      this.needsRedraw = false;
     }
   }
+
   updateColor(color) {
     this.color = color;
+    this.needsRedraw = true;
   }
+
   addPerson() {
     this.hasPerson = true;
+    this.needsRedraw = true;
   }
 }
