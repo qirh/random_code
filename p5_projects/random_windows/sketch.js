@@ -41,8 +41,8 @@ let winds = [];
 let colorCounter = 0;
 
 function setup() {
+  console.log("3");
   createCanvas(windowWidth, windowHeight);
-  noLoop();
 
   let xPointer = 0;
 
@@ -66,12 +66,14 @@ function draw() {
     window.display();
   });
 
-  if (millis() - lastUpdateTime > updateInterval) {
+  let time_now = millis();
+  if (time_now - lastUpdateTime > updateInterval) {
     colorCounter++;
     let randomWindow = Math.floor(Math.random() * winds.length);
 
     winds[randomWindow].updateColor(COLORS[colorCounter % COLORS.length]);
     winds[randomWindow].addPerson();
+    lastUpdateTime = time_now;
   }
 }
 
@@ -85,8 +87,8 @@ class Window {
   }
 
   display() {
-    if (this.needsRedraw) {
-      noStroke();
+    // if (this.needsRedraw) {
+      // noStroke();
       fill(this.color);
       stroke(0, 100);
       strokeWeight(3);
@@ -105,7 +107,7 @@ class Window {
         ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
       }
       this.needsRedraw = false;
-    }
+    // }
   }
 
   updateColor(color) {
