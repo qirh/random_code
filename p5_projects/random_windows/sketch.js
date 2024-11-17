@@ -1,7 +1,77 @@
 const GAP = 5;
 const SIZE = 25;
+const COLORS = [
+  "blue",
+  "orange",
+  "green",
+  "yellow",
+  "red",
+  "purple",
+  "pink",
+  "brown",
+  "white",
+  "gray",
+  "cyan",
+  "magenta",
+  "lime",
+  "teal",
+  "indigo",
+  "violet",
+  "turquoise",
+  "beige",
+  "maroon",
+  "navy",
+  "gold",
+  "silver",
+  "lavender",
+  "peach",
+  "apricot",
+  "mint",
+  "coral",
+  "salmon",
+  "chocolate",
+  "tan",
+  "plum",
+  "orchid",
+  "amber",
+  "olive",
+  "khaki",
+  "rose",
+  "crimson",
+  "azure",
+  "cerulean",
+  "chartreuse",
+  "sapphire",
+  "emerald",
+  "ruby",
+  "fuchsia",
+  "bronze",
+  "copper",
+  "jade",
+  "scarlet",
+  "amethyst",
+  "periwinkle",
+  "mulberry",
+  "charcoal",
+  "sand",
+  "denim",
+  "clay",
+  "cherry",
+  "pine",
+  "mustard",
+  "burgundy",
+  "auburn",
+  "sienna",
+  "caramel",
+  "pearl",
+  "brass",
+  "ochre",
+  "ruby",
+  "terracotta",
+];
+const updateInterval = 3000; // Update every n milliseconds
+let lastUpdateTime = 0;
 let winds = [];
-let counter = 0;
 let colorCounter = 0;
 
 function setup() {
@@ -28,95 +98,13 @@ function draw() {
   winds.forEach((window) => {
     window.display();
   });
-  let colors = [
-    "blue",
-    "orange",
-    "green",
-    "yellow",
-    "red",
-    "purple",
-    "pink",
-    "brown",
-    "black",
-    "white",
-    "gray",
-    "cyan",
-    "magenta",
-    "lime",
-    "teal",
-    "indigo",
-    "violet",
-    "turquoise",
-    "beige",
-    "maroon",
-    "navy",
-    "gold",
-    "silver",
-    "lavender",
-    "peach",
-    "apricot",
-    "mint",
-    "coral",
-    "salmon",
-    "chocolate",
-    "tan",
-    "plum",
-    "orchid",
-    "amber",
-    "olive",
-    "khaki",
-    "rose",
-    "crimson",
-    "azure",
-    "cerulean",
-    "chartreuse",
-    "sapphire",
-    "emerald",
-    "ruby",
-    "fuchsia",
-    "bronze",
-    "copper",
-    "jade",
-    "scarlet",
-    "amethyst",
-    "periwinkle",
-    "mulberry",
-    "charcoal",
-    "sand",
-    "denim",
-    "clay",
-    "cherry",
-    "pine",
-    "mustard",
-    "burgundy",
-    "auburn",
-    "sienna",
-    "caramel",
-    "pearl",
-    "brass",
-    "ochre",
-    "ruby",
-    "terracotta",
-  ];
-  if (counter < 30) {
-    counter++;
-  }
-  if (counter === 30) {
+
+  if (millis() - lastUpdateTime > updateInterval) {
     colorCounter++;
-    let randomSelection = Math.floor(Math.random() * winds.length);
+    let randomWindow = Math.floor(Math.random() * winds.length);
 
-    winds[randomSelection].updateColor(colors[colorCounter % colors.length]);
-    winds[randomSelection].addPerson()
-    counter = 0;
-  }
-}
-
-function makeWindow(x, y, color = "orange") {
-  for (let i = 0; i < 4; i++) {
-    fill(color);
-    stroke(0, 100);
-    strokeWeight(3);
-    square((i % 2) * SIZE + x, Math.floor(i / 2) * SIZE + y, SIZE - GAP);
+    winds[randomWindow].updateColor(COLORS[colorCounter % COLORS.length]);
+    winds[randomWindow].addPerson();
   }
 }
 
@@ -129,10 +117,11 @@ class Window {
   }
 
   display() {
+    fill(this.color);
+    stroke(0, 100);
+    strokeWeight(3);
+
     for (let i = 0; i < 4; i++) {
-      fill(this.color);
-      stroke(0, 100);
-      strokeWeight(3);
       square(
         (i % 2) * SIZE + this.x,
         Math.floor(i / 2) * SIZE + this.y,
@@ -141,8 +130,8 @@ class Window {
     }
     if (this.hasPerson) {
       fill("#393434");
-      ellipse(this.x + SIZE+10, this.y + SIZE, 15, 20)
-      ellipse(this.x + SIZE+10, this.y +20+ SIZE, 15, 20)
+      ellipse(this.x + SIZE + 10, this.y + SIZE, 15, 20);
+      ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
     }
   }
   updateColor(color) {
