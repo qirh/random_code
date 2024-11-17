@@ -35,13 +35,12 @@ const COLORS = [
   "sienna",
   "terracotta",
 ];
-const updateInterval = 3000; // Update every n milliseconds
+const updateInterval = 1000; // Update every n milliseconds
 let lastUpdateTime = 0;
 let winds = [];
 let colorCounter = 0;
 
 function setup() {
-  console.log("3");
   createCanvas(windowWidth, windowHeight);
 
   let xPointer = 0;
@@ -55,16 +54,13 @@ function setup() {
     xPointer += 2 * SIZE + GAP * 3;
   }
 
+  background("black");
   winds.forEach((window) => {
     window.display();
   });
 }
 
 function draw() {
-  background("black");
-  winds.forEach((window) => {
-    window.display();
-  });
 
   let time_now = millis();
   if (time_now - lastUpdateTime > updateInterval) {
@@ -73,6 +69,7 @@ function draw() {
 
     winds[randomWindow].updateColor(COLORS[colorCounter % COLORS.length]);
     winds[randomWindow].addPerson();
+    winds[randomWindow].display();
     lastUpdateTime = time_now;
   }
 }
@@ -87,8 +84,7 @@ class Window {
   }
 
   display() {
-    // if (this.needsRedraw) {
-      // noStroke();
+    if (this.needsRedraw) {
       fill(this.color);
       stroke(0, 100);
       strokeWeight(3);
@@ -107,7 +103,7 @@ class Window {
         ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
       }
       this.needsRedraw = false;
-    // }
+    }
   }
 
   updateColor(color) {
