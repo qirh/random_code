@@ -61,7 +61,6 @@ function setup() {
 }
 
 function draw() {
-
   let time_now = millis();
   if (time_now - lastUpdateTime > updateInterval) {
     colorCounter++;
@@ -69,7 +68,7 @@ function draw() {
 
     winds[randomWindow].updateColor(COLORS[colorCounter % COLORS.length]);
     winds[randomWindow].addPerson();
-    winds[randomWindow].display();
+    winds[randomWindow].display(); // Redraw only the updated window
     lastUpdateTime = time_now;
   }
 }
@@ -80,39 +79,33 @@ class Window {
     this.y = y;
     this.color = color;
     this.hasPerson = false;
-    this.needsRedraw = true;
   }
 
   display() {
-    if (this.needsRedraw) {
-      fill(this.color);
-      stroke(0, 100);
-      strokeWeight(3);
+    fill(this.color);
+    stroke(0, 100);
+    strokeWeight(3);
 
-      for (let i = 0; i < 4; i++) {
-        square(
-          (i % 2) * SIZE + this.x,
-          Math.floor(i / 2) * SIZE + this.y,
-          SIZE - GAP
-        );
-      }
+    for (let i = 0; i < 4; i++) {
+      square(
+        (i % 2) * SIZE + this.x,
+        Math.floor(i / 2) * SIZE + this.y,
+        SIZE - GAP
+      );
+    }
 
-      if (this.hasPerson) {
-        fill("#393434");
-        ellipse(this.x + SIZE + 10, this.y + SIZE, 15, 20);
-        ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
-      }
-      this.needsRedraw = false;
+    if (this.hasPerson) {
+      fill("#393434");
+      ellipse(this.x + SIZE + 10, this.y + SIZE, 15, 20);
+      ellipse(this.x + SIZE + 10, this.y + 20 + SIZE, 15, 20);
     }
   }
 
   updateColor(color) {
     this.color = color;
-    this.needsRedraw = true;
   }
 
   addPerson() {
     this.hasPerson = true;
-    this.needsRedraw = true;
   }
 }
