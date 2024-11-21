@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
@@ -34,7 +33,7 @@ export function BoringNJ() {
           <Alert className="mt-4">
             <AlertTitle>Application denied</AlertTitle>
             <AlertDescription>
-              It's for your own good.
+              Its for your own good.
             </AlertDescription>
           </Alert>
         )}

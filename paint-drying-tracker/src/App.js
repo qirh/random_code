@@ -14,31 +14,28 @@ const PaintDryingTracker = () => {
   const audioRef = useRef(null);
 
 
+
+  useEffect(() => {
+    if (isTracking) {
+      setTotalDryingTime(roundUpToNearestNInRange(temperature + humidity, 20, 80, 10));
+    }
+
+  }, [isTracking, totalDryingTime]);
+
   useEffect(() => {
     let interval;
-    if (isTracking) {
+    if (isTracking && totalDryingTime > 0) {
       interval = setInterval(() => {
-        const progressIncrement =
-          0.4 +
-          (temperature > 70 ? 0.3 : 0) -
-          (humidity > 50 ? 0.2 : 0);
-
-        setTotalDryingTime(300);
-
-        setElapsedTime(prev => {
-          let newTime;
-          if (prev > 30) {
-            newTime = 0;
-          } else {
-            newTime = Math.min(prev + 1, prev + (3 / (prev + 1)));
-          }
-          console.log("previous_time: " + prev + ". addedTime: " + Math.min(prev + 1, prev + (3 / (prev + 1))));
+        setElapsedTime(currentTime => {
+          const newTime = calculateNewTime(currentTime, totalDryingTime);
+          console.log("previous_time: " + currentTime + ". newTime: " + newTime);
           return newTime;
         });
+
       }, 1000);
+      return () => clearInterval(interval);
     }
-    return () => clearInterval(interval);
-  }, [isTracking]);
+  }, [isTracking, totalDryingTime, elapsedTime]);
 
   useEffect(() => {
     if (totalDryingTime > 0) {
@@ -79,6 +76,26 @@ const PaintDryingTracker = () => {
   const toggleMusic = () => {
     setIsMusicPlaying(!isMusicPlaying);
   };
+
+  const roundUpToNearestNInRange = ((number, min, max, n) => {
+    const rounded = Math.ceil(number / n) * n;
+    return Math.min(max, Math.max(min, rounded));
+  })
+
+  const calculateNewTime = (currentTime, totalTime) => {
+    const ratio = currentTime / totalTime;
+
+    console.log("ratio: " + ratio);
+    if (ratio >= 0 && ratio < 0.25) {
+      return currentTime + 1;
+    } else if (ratio >= 0.25 && ratio < 0.5) {
+      return currentTime + (1 / currentTime);
+    } else if (ratio >= 0.5 && ratio < 0.75) {
+      return currentTime + (1 / (currentTime * currentTime));
+    } else { //  (ratio >= 0.75) 
+      return currentTime + (1 / (currentTime * currentTime * currentTime));
+    }
+  }
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-4 text-center">

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NJ Tourist Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="min-h-screen bg-gray-200 flex flex-col items-center justify-center p-4">
+        <header class="w-full max-w-3xl bg-gray-300 p-4 mb-6 text-center">
+            <h1 class="text-2xl font-bold text-gray-700">NJ Tourist Guide</h1>
+        </header>
+
+        <main class="w-full max-w-3xl bg-white p-6 rounded shadow-sm">
+            <section class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-600 mb-2">About Our State</h2>
+                <p class="text-gray-500 leading-relaxed">
+                    New Jersey is a state. It has some cities and some beaches. Sometimes people go to these places. The
+                    weather changes throughout the year.
+                </p>
+            </section>
+
+            <section class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-600 mb-2">Things to Do</h2>
+                <ul class="list-disc list-inside text-gray-500">
+                    <li>Visit the shore</li>
+                    <li>Look at some buildings</li>
+                    <li>Eat food</li>
+                    <li>Drive on a road (or a turnpike)</li>
+                </ul>
+            </section>
+
+            <section class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-600 mb-2">Apply to visit</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label for="message" class="text-gray-600">Reason for visit</label>
+                        <textarea id="message"
+                            class="w-full h-24 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                            placeholder="why?..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded">Send
+                        application</button>
+                </form>
+            </section>
+        </main>
+
+        <footer class="w-full max-w-3xl bg-gray-300 p-4 mt-6 text-center text-gray-600">
+            <p>&copy; 2013. All rights reserved, i guess.</p>
+        </footer>
+    </div>
+</body>
+
+</html>
