@@ -37,10 +37,10 @@ jobs:
             cp -a build/* .
             
             echo "-- contents of /build:"
-            ls -R build
+            ls -R -l build
             
             echo "-- contents of /static:"
-            ls -R static
+            ls -R -l static
             cd -
           fi
         done
