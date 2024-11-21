@@ -35,7 +35,7 @@
 
             <section class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-600 mb-2">Apply to visit</h2>
-                <form class="space-y-4">
+                <form id="visitForm" class="space-y-4">
                     <div>
                         <label for="message" class="text-gray-600">Reason for visit</label>
                         <textarea id="message"
@@ -52,6 +52,14 @@
             <p>&copy; 2013. All rights reserved, i guess.</p>
         </footer>
     </div>
+
+    <script>
+        document.getElementById('visitForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            alert('Application submitted. Our team will not review it and will not get back to you.');
+            document.getElementById('message').value = '';
+        });
+    </script>
 </body>
 
 </html>

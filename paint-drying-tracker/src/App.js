@@ -17,7 +17,7 @@ const PaintDryingTracker = () => {
 
   useEffect(() => {
     if (isTracking) {
-      setTotalDryingTime(roundUpToNearestNInRange(temperature + humidity, 20, 80, 10));
+      setTotalDryingTime(roundUpToNearestNInRange(temperature + humidity, 20, 40, 5));
     }
 
   }, [isTracking, totalDryingTime]);
@@ -183,9 +183,6 @@ const PaintDryingTracker = () => {
         <div className="flex items-center justify-center">
           <Timer className="mr-2" />
           <span>Elapsed Time: {Math.floor(elapsedTime)} seconds</span>
-        </div>
-        <div className="mt-2">
-          Progress: {dryingProgress.toFixed(2)}%
         </div>
         <div className="mt-2">
           Total Drying Time: {totalDryingTime} Seconds
