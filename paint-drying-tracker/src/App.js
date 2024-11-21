@@ -46,6 +46,7 @@ const PaintDryingTracker = () => {
   useEffect(() => {
     if (audioRef.current) {
       if (playMusic && isTracking) {
+        audioRef.current.volume = 0.5
         audioRef.current.play();
       } else {
         audioRef.current.pause();
@@ -55,6 +56,11 @@ const PaintDryingTracker = () => {
   }, [playMusic, isTracking]);
 
 
+  const changeVolume = (volume) => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }
 
   const getStatusMessage = () => {
     if (dryingProgress < 25) return "Fresh and Wet 💧";
@@ -100,7 +106,6 @@ const PaintDryingTracker = () => {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-4 text-center">
-
 
       <h1 className="text-2xl font-bold text-gray-800">
         🎨 Paint Drying Tracker 🖌️
