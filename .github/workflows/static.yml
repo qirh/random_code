@@ -18,140 +18,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  detect-projects:
-    runs-on: ubuntu-latest
-    outputs:
-      react-projects: ${{ steps.detect.outputs.react-projects }}
-      static-projects: ${{ steps.detect.outputs.static-projects }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Detect Projects
-        id: detect
-        run: |
-          # Function to check if a directory is a React project
-          is_react_project() {
-            local dir="$1"
-            if [ -f "$dir/package.json" ] && grep -q '"react"' "$dir/package.json"; then
-              return 0
-            fi
-            return 1
-          }
-
-          # Find and classify projects
-          react_projects=()
-          static_projects=()
-
-          for dir in */; do
-            # Remove trailing slash
-            clean_dir=$(echo "$dir" | sed 's:/*$::')
-            
-            # Skip some common directories that aren't projects
-            if [[ "$clean_dir" == ".github" || "$clean_dir" == "node_modules" ]]; then
-              continue
-            fi
-
-            # Check if it's a React project
-            if is_react_project "$clean_dir"; then
-              react_projects+=("$clean_dir")
-            # Check if it's a static HTML project (has HTML files)
-            elif find "$clean_dir" -maxdepth 1 -type f -name "*.html" | read; then
-              static_projects+=("$clean_dir")
-            fi
-          done
-
-          # Convert arrays to JSON for GitHub Actions
-          react_json=$(printf '%s\n' "${react_projects[@]}" | jq -R . | jq -s .)
-          static_json=$(printf '%s\n' "${static_projects[@]}" | jq -R . | jq -s .)
-
-          # Output the results
-          echo "react-projects=${react_json}" >> $GITHUB_OUTPUT
-          echo "static-projects=${static_json}" >> $GITHUB_OUTPUT
-          
-          # Debug output
-          echo "Detected React Projects: ${react_json}"
-          echo "Detected Static Projects: ${static_json}"
-
-  build-react-projects:
-    needs: detect-projects
-    if: ${{ needs.detect-projects.outputs.react-projects != '[]' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: ${{ fromJson(needs.detect-projects.outputs.react-projects) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: ${{ matrix.project }}/package-lock.json
-      
-      - name: Install Dependencies
-        working-directory: ${{ matrix.project }}
-        run: npm ci
-      
-      - name: Build Project
-        working-directory: ${{ matrix.project }}
-        run: npm run build
-      
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.project }}-build
-          path: ${{ matrix.project }}/build
-
-  build-static-projects:
-    needs: detect-projects
-    if: ${{ needs.detect-projects.outputs.static-projects != '[]' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: ${{ fromJson(needs.detect-projects.outputs.static-projects) }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.project }}-build
-          path: ${{ matrix.project }}
-
   deploy:
-    needs: [build-react-projects, build-static-projects]
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Download React project artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: '*-react-*-build'
-          path: dist/react-projects
-      
-      - name: Download Static project artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: '*-static-*-build'
-          path: dist/static-projects
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-      
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build React App
+      working-directory: react-sites
+      run: |
+        npm ci
+        npm run build
+
+    - name: Prepare Deployment Directory
+      run: |
+        mkdir final_build
+        echo "Copying static site"
+        cp -r static-sites/* final_build/
+        echo "Copying React app"
+        cp -r react-sites/build/* final_build/
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: final_build
