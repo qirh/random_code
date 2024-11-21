@@ -12,7 +12,7 @@ const PaintDryingTracker = () => {
   const [humidity, setHumidity] = useState(70);
   const [temperature, setTemperature] = useState(75);
 
-  const audioRef = useRef(new Audio('/jeopardy.mp3'));
+  const audioRef = useRef(new Audio('./jeopardy.mp3'));
 
 
   useEffect(() => {
@@ -138,14 +138,14 @@ const PaintDryingTracker = () => {
               onClick={() => setIsTracking(true)}
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >
-            Start Painting
+              Start Painting
             </button>
           ) : (
             <button
               onClick={resetTracking}
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
-            Reset Painting
+              Reset Painting
             </button>
           )}
         </div>
