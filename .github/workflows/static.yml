@@ -35,6 +35,12 @@ jobs:
             npm run build
             # Move all files in build folder one level up
             cp -a build/* .
+            
+            echo "-- contents of /build:"
+            ls -R build
+            
+            echo "-- contents of /static:"
+            ls -R static
             cd -
           fi
         done
