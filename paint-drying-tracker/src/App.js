@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Droplet, Timer, Sun, Thermometer, Volume2, VolumeX } from 'lucide-react';
+import { Droplet, Timer, Thermometer, Volume2, VolumeX } from 'lucide-react';
 
 const PaintDryingTracker = () => {
   const [dryingProgress, setDryingProgress] = useState(0);
   const [totalDryingTime, setTotalDryingTime] = useState(0);
   const [isTracking, setIsTracking] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [playMusic, setPlayMusic] = useState(true);
+  const [paintColor, setPaintColor] = useState('#89CFF0');
   const [elapsedTime, setElapsedTime] = useState(0);
 
   const [humidity, setHumidity] = useState(70);
   const [temperature, setTemperature] = useState(75);
 
-  const audioRef = useRef(null);
-
+  const audioRef = useRef(new Audio('/jeopardy.mp3'));
 
 
   useEffect(() => {
@@ -20,22 +20,25 @@ const PaintDryingTracker = () => {
       setTotalDryingTime(roundUpToNearestNInRange(temperature + humidity, 20, 40, 5));
     }
 
-  }, [isTracking, totalDryingTime]);
+  }, [isTracking, temperature, humidity]);
 
   useEffect(() => {
+    console.log("useEffect1");
     let interval;
     if (isTracking && totalDryingTime > 0) {
+      console.log("useEffect2");
       interval = setInterval(() => {
+        console.log("useEffect3");
         setElapsedTime(currentTime => {
+          console.log("useEffect4");
           const newTime = calculateNewTime(currentTime, totalDryingTime);
           console.log("previous_time: " + currentTime + ". newTime: " + newTime);
           return newTime;
         });
-
       }, 1000);
       return () => clearInterval(interval);
     }
-  }, [isTracking, totalDryingTime, elapsedTime]);
+  }, [isTracking, totalDryingTime]);
 
   useEffect(() => {
     if (totalDryingTime > 0) {
@@ -46,14 +49,14 @@ const PaintDryingTracker = () => {
 
   useEffect(() => {
     if (audioRef.current) {
-      if (isMusicPlaying && isTracking) {
+      if (playMusic && isTracking) {
         audioRef.current.play();
       } else {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
     }
-  }, [isMusicPlaying, isTracking]);
+  }, [playMusic, isTracking]);
 
 
 
@@ -69,12 +72,11 @@ const PaintDryingTracker = () => {
     setDryingProgress(0);
     setElapsedTime(0);
     setIsTracking(false);
-    setIsMusicPlaying(false);
-
+    setTotalDryingTime(0);
   };
 
   const toggleMusic = () => {
-    setIsMusicPlaying(!isMusicPlaying);
+    setPlayMusic(!playMusic);
   };
 
   const roundUpToNearestNInRange = ((number, min, max, n) => {
@@ -85,25 +87,24 @@ const PaintDryingTracker = () => {
   const calculateNewTime = (currentTime, totalTime) => {
     const ratio = currentTime / totalTime;
 
-    console.log("ratio: " + ratio);
     if (ratio >= 0 && ratio < 0.25) {
       return currentTime + 1;
     } else if (ratio >= 0.25 && ratio < 0.5) {
       return currentTime + (1 / currentTime);
     } else if (ratio >= 0.5 && ratio < 0.75) {
-      return currentTime + (1 / (currentTime * currentTime));
-    } else { //  (ratio >= 0.75) 
-      return currentTime + (1 / (currentTime * currentTime * currentTime));
+      return currentTime + (1 / (currentTime ** 2));
+    } else if (ratio >= 0.75 && ratio < 0.85) {
+      return currentTime + (1 / (currentTime ** 3));
+    } else if (ratio >= 0.85 && ratio < 0.95) {
+      return currentTime + (1 / (currentTime ** 5));
+    } else {
+      return currentTime + (1 / (currentTime ** 7));
     }
   }
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-4 text-center">
-      <audio
-        ref={audioRef}
-        src="https://cdnjs.cloudflare.com/ajax/libs/30-seconds-of-jeopardy-think-music/1.0.0/jeopardy.mp3"
-        loop
-      />
+
 
       <h1 className="text-2xl font-bold text-gray-800">
         🎨 Paint Drying Tracker 🖌️
@@ -111,11 +112,10 @@ const PaintDryingTracker = () => {
 
       <button
         onClick={toggleMusic}
-        disabled={!isTracking}
         className={`absolute top-4 right-4 p-2 rounded-full 
           ${isTracking ? 'hover:bg-gray-200' : 'opacity-50 cursor-not-allowed'}`}
       >
-        {isMusicPlaying ? <VolumeX size={24} /> : <Volume2 size={24} />}
+        {playMusic ? <Volume2 size={24} /> : <VolumeX size={24} />}
       </button>
 
       <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
@@ -131,22 +131,34 @@ const PaintDryingTracker = () => {
       </div>
 
 
-      <div className="flex justify-center space-x-4">
-        {!isTracking ? (
-          <button
-            onClick={() => setIsTracking(true)}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Start Tracking
-          </button>
-        ) : (
-          <button
-            onClick={resetTracking}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Reset Tracking
-          </button>
-        )}
+      <div className="flex justify-center items-center space-x-4">
+        <div>
+          {!isTracking ? (
+            <button
+              onClick={() => setIsTracking(true)}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+            Start Painting
+            </button>
+          ) : (
+            <button
+              onClick={resetTracking}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+            Reset Painting
+            </button>
+          )}
+        </div>
+        <div className="flex flex-col items-center">
+          <input
+            type="color"
+            disabled={isTracking}
+            onChange={(e) => setPaintColor(e.target.value)}
+            className="w-20 h-10 cursor-pointer rounded border border-gray-300"
+            title="Choose paint color"
+            value={paintColor}
+          />
+        </div>
       </div>
 
 
@@ -156,6 +168,7 @@ const PaintDryingTracker = () => {
           <input
             type="number"
             value={temperature}
+            disabled={isTracking}
             onChange={(e) => setTemperature(Number(e.target.value))}
             className="w-20 px-2 py-1 border rounded"
             placeholder="Temp (°F)"
@@ -169,6 +182,7 @@ const PaintDryingTracker = () => {
           <input
             type="number"
             value={humidity}
+            disabled={isTracking}
             onChange={(e) => setHumidity(Number(e.target.value))}
             className="w-20 px-2 py-1 border rounded"
             placeholder="Humidity %"
