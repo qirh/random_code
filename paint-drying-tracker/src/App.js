@@ -46,7 +46,7 @@ const PaintDryingTracker = () => {
   useEffect(() => {
     if (audioRef.current) {
       if (playMusic && isTracking) {
-        audioRef.current.volume = 0.5
+        changeVolume(0.5);
         audioRef.current.play();
       } else {
         audioRef.current.pause();
