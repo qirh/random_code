@@ -1,5 +1,5 @@
 
-name: Deploy static content and react projects to GH Pages
+name: Deploy static/react projects to GH Pages
 
 on:
   push:
@@ -26,10 +26,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Build React App
+    - name: Build React Apps
       working-directory: react-sites
       run: |
-        npm ci
+        npm i
         npm run build
 
     - name: Prepare Deployment Directory
