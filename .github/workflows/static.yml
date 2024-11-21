@@ -135,13 +135,13 @@ jobs:
       - name: Download React project artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: *-react-*-build
+          pattern: '*-react-*-build'
           path: dist/react-projects
       
       - name: Download Static project artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: *-static-*-build
+          pattern: '*-static-*-build'
           path: dist/static-projects
       
       - name: Setup Pages
