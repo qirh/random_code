@@ -23,14 +23,10 @@ const PaintDryingTracker = () => {
   }, [isTracking, temperature, humidity]);
 
   useEffect(() => {
-    console.log("useEffect1");
     let interval;
     if (isTracking && totalDryingTime > 0) {
-      console.log("useEffect2");
       interval = setInterval(() => {
-        console.log("useEffect3");
         setElapsedTime(currentTime => {
-          console.log("useEffect4");
           const newTime = calculateNewTime(currentTime, totalDryingTime);
           console.log("previous_time: " + currentTime + ". newTime: " + newTime);
           return newTime;
@@ -115,7 +111,7 @@ const PaintDryingTracker = () => {
         className={`absolute top-4 right-4 p-2 rounded-full 
           ${isTracking ? 'hover:bg-gray-200' : 'opacity-50 cursor-not-allowed'}`}
       >
-        {playMusic ? <Volume2 size={24} /> : <VolumeX size={24} />}
+        {playMusic ? <Volume2 size={12} /> : <VolumeX size={12} />}
       </button>
 
       <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
