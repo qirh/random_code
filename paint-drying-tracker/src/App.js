@@ -111,7 +111,7 @@ const PaintDryingTracker = () => {
         className={`absolute top-4 right-4 p-2 rounded-full 
           ${isTracking ? 'hover:bg-gray-200' : 'opacity-50 cursor-not-allowed'}`}
       >
-        {playMusic ? <Volume2 size={12} /> : <VolumeX size={12} />}
+        {playMusic ? <Volume2 size={24} /> : <VolumeX size={24} />}
       </button>
 
       <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
