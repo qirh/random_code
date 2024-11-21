@@ -33,7 +33,9 @@ jobs:
             cd "$dir"
             npm i
             npm run build
-            
+            # Move all files in build folder one level up
+            mv build/* .
+            rm -rf build
             cd -
           fi
         done
