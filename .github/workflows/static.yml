@@ -22,24 +22,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
+    # Step 1: Checkout the repository
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
+    # Step 2: Build React Apps
     - name: Build React Apps
-      working-directory: react-sites
       run: |
-        npm i
-        npm run build
+        mkdir -p final_build
+        echo "Processing React apps in react-sites/"
+        for dir in react-sites/*/; do
+          if [ -f "$dir/package.json" ]; then
+            echo "Building React app in $dir"
+            cd "$dir"
+            npm i
+            npm run build
+            mv build ../../final_build/$(basename "$dir") # Move the built app
+            cd -
+          else
+            echo "No package.json found in $dir, skipping..."
+          fi
+        done
 
-    - name: Prepare Deployment Directory
+    # Step 3: Copy Static Sites
+    - name: Copy Static Sites
       run: |
-        mkdir final_build
-        echo "Copying static site"
-        cp -r static-sites/* final_build/
-        echo "Copying React app"
-        cp -r react-sites/build/* final_build/
+        echo "Processing static sites in static-sites/"
+        for dir in static-sites/*/; do
+          if [ -f "$dir/index.html" ]; then
+            echo "Copying static site from $dir"
+            mkdir -p final_build/$(basename "$dir")
+            cp -r $dir/* final_build/$(basename "$dir") # Copy static site files
+          else
+            echo "No index.html found in $dir, skipping..."
+          fi
+        done
 
+    # Step 4: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
