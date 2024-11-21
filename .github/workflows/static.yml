@@ -20,12 +20,15 @@ concurrency:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
     # Step 1: Checkout the repository
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # Step 2: Find project directories
     - name: Detect Projects
@@ -39,7 +42,11 @@ jobs:
         static_dirs=$(find . -name index.html -exec dirname {} \;)
         echo "static_dirs=$static_dirs" >> $GITHUB_ENV
 
-    # Step 3: Build React Apps
+    # Step 3: Create a Combined Build Directory
+    - name: Create Combined Directory
+      run: mkdir final_build
+
+    # Step 4: Build React Apps
     - name: Build React Apps
       if: env.react_dirs
       run: |
@@ -48,23 +55,22 @@ jobs:
           cd $dir
           npm ci
           npm run build
-          mv build ../../build_$dir # Move the build output to a centralized directory
+          mv build/* ../../final_build/ # Move the build output to the final_build directory
           cd -
         done
 
-    # Step 4: Prepare Static Directories
+    # Step 5: Prepare Static Directories
     - name: Collect Static Directories
       if: env.static_dirs
       run: |
         for dir in $static_dirs; do
           echo "Collecting static directory $dir"
-          cp -r $dir ../../build_$dir # Copy static directories to a centralized location
+          cp -r $dir/* final_build/ # Copy static files to the final_build directory
         done
 
-    # Step 5: Deploy to GitHub Pages
+    # Step 6: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: |
-          $(ls -d ../../build_*)
+        publish_dir: final_build
