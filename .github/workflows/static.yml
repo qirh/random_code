@@ -1,12 +1,11 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+
+name: Deploy static content and react projects to GH Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # run workflow manually
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -15,29 +14,58 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+    
+    # Step 1: Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Find project directories
+    - name: Detect Projects
+      id: detect_projects
+      run: |
+        # Find directories with package.json (React or Node-based projects)
+        react_dirs=$(find . -name package.json -exec dirname {} \;)
+        echo "react_dirs=$react_dirs" >> $GITHUB_ENV
+
+        # Find other static directories with index.html
+        static_dirs=$(find . -name index.html -exec dirname {} \;)
+        echo "static_dirs=$static_dirs" >> $GITHUB_ENV
+
+    # Step 3: Build React Apps
+    - name: Build React Apps
+      if: env.react_dirs != ""
+      run: |
+        for dir in $react_dirs; do
+          echo "Building React app in $dir"
+          cd $dir
+          npm ci
+          npm run build
+          mv build ../../build_$dir # Move the build output to a centralized directory
+          cd -
+        done
+
+    # Step 4: Prepare Static Directories
+    - name: Collect Static Directories
+      if: env.static_dirs != ""
+      run: |
+        for dir in $static_dirs; do
+          echo "Collecting static directory $dir"
+          cp -r $dir ../../build_$dir # Copy static directories to a centralized location
+        done
+
+    # Step 5: Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: |
+          $(ls -d ../../build_*)
