@@ -35,6 +35,7 @@ jobs:
             npm run build
             # Move all files in build folder one level up
             mv build/* .
+            mv build/static/* ./static # this is a hack since mv doesn't have a -r option
             rm -rf build
             cd -
           fi
