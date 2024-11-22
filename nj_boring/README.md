@@ -1,3 +1,3 @@
-Just for fun, no offense intended.
+https://qirh.github.io/random_code/nj_boring/
 
-`npm run dev`
+Just for fun, no offense intended.

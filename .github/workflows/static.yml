@@ -24,7 +24,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Process and Deploy Folders
+    - name: Build react apps
       run: |
         echo "Processing folders in the repository"
         for dir in */; do
