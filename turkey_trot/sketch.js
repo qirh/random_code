@@ -4,8 +4,10 @@ const runnerImgs = [];
 let isMousePressed = false;
 
 function preload() {
+    loadImage('assets/stop.png')
+    loadImage('assets/finish.png')
     for (let i = 0; i < RUNNER_COUNT; i++) {
-        runnerImgs[i] = loadImage('/assets/runner_' + i + '.png');
+        runnerImgs[i] = loadImage('assets/runner_' + i + '.png');
     }
 }
 
@@ -38,5 +40,5 @@ function mousePressed() {
 }
 
 function updateCursor() {
-    cursor(isMousePressed ? 'assets/stop.png' : '/assets/finish.png');
+    cursor(isMousePressed ? 'assets/stop.png' : 'assets/finish.png');
 }
