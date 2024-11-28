@@ -5,7 +5,7 @@ let isMousePressed = false;
 
 function preload() {
     for (let i = 0; i < RUNNER_COUNT; i++) {
-        runnerImgs[i] = loadImage('https://github.com/qirh/random_code/blob/main/turkey_trot/assets/runner_' + i + '.png');
+        runnerImgs[i] = loadImage('/assets/runner_' + i + '.png');
     }
 }
 
@@ -38,5 +38,5 @@ function mousePressed() {
 }
 
 function updateCursor() {
-    cursor(isMousePressed ? 'https://github.com/qirh/random_code/blob/main/turkey_trot/assets/stop.png' : 'https://github.com/qirh/random_code/blob/main/turkey_trot/assets/finish.png');
+    cursor(isMousePressed ? 'assets/stop.png' : '/assets/finish.png');
 }
