@@ -1,52 +1,42 @@
 const RUNNER_COUNT = 8;
-let runners = [];
+const runners = [];
+const runnerImgs = [];
 let isMousePressed = false;
-let runnerImgs = [];
 
 function preload() {
     for (let i = 0; i < RUNNER_COUNT; i++) {
-        runnerImgs[i] = loadImage('/assets/runner_' + i + '.png');
+        runnerImgs[i] = loadImage('https://github.com/qirh/random_code/blob/main/turkey_trot/assets/runner_' + i + '.png');
     }
 }
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    cursor('/assets/stop.png');
+    updateCursor();
 
     for (let i = 0; i < RUNNER_COUNT; i++) {
         let r = new Runner(0, i / RUNNER_COUNT * windowHeight, random(2, 4), runnerImgs[i]);
         runners.push(r);
     }
-
-    circle(windowWidth / 2, windowHeight / 2, 20);
 }
 
 function draw() {
     background(255);
-    let mouse = createVector(mouseX, mouseY);
+    const mouse = createVector(mouseX, mouseY);
 
-    fill(127);
-    stroke(0);
-    strokeWeight(2);
-
-    if (isMousePressed) {
-        for (let runner of runners) {
+    runners.forEach((runner) => {
+        if (isMousePressed) {
             runner.arrive(mouse);
             runner.update();
-            runner.show();
         }
-    } else {
-        for (let runner of runners) {
-            runner.show();
-        }
-    }
+        runner.show();
+    });
 }
 
 function mousePressed() {
-    if (isMousePressed) {
-        cursor('/assets/stop.png');
-    } else {
-        cursor('/assets/finish.png');
-    }
     isMousePressed = !isMousePressed;
+    updateCursor();
+}
+
+function updateCursor() {
+    cursor(isMousePressed ? 'https://github.com/qirh/random_code/blob/main/turkey_trot/assets/stop.png' : 'https://github.com/qirh/random_code/blob/main/turkey_trot/assets/finish.png');
 }
