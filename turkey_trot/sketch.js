@@ -1,13 +1,20 @@
-const RUNNER_COUNT = 10;
+const RUNNER_COUNT = 8;
 let runners = [];
 let isMousePressed = false;
+let runnerImgs = [];
+
+function preload() {
+    for (let i = 0; i < RUNNER_COUNT; i++) {
+        runnerImgs[i] = loadImage('/assets/runner_' + i + '.png');
+    }
+}
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-    cursor('🏁');
+    cursor('/assets/stop.png');
 
     for (let i = 0; i < RUNNER_COUNT; i++) {
-        let r = new Runner(0, i / RUNNER_COUNT * windowHeight, 2.5 + random());
+        let r = new Runner(0, i / RUNNER_COUNT * windowHeight, random(2, 4), runnerImgs[i]);
         runners.push(r);
     }
 
@@ -38,10 +45,8 @@ function draw() {
 function mousePressed() {
     if (isMousePressed) {
         cursor('/assets/stop.png');
-        // cursor('https://avatars0.githubusercontent.com/u/1617169?s=16');
     } else {
-
-        cursor('assets/finish.png');
+        cursor('/assets/finish.png');
     }
     isMousePressed = !isMousePressed;
 }

@@ -1,11 +1,11 @@
 class Runner {
-    constructor(x, y, maxspeed = 3, maxforce = 0.1) {
+    constructor(x, y, maxspeed, img) {
         this.acceleration = createVector(1000, 1000);
         this.velocity = createVector(1000, 1000);
         this.position = createVector(x, y);
-        this.r = 6;
         this.maxspeed = maxspeed;
-        this.maxforce = maxforce;
+        this.maxforce = 0.1;
+        this.img = img;
     }
 
     update() {
@@ -35,18 +35,6 @@ class Runner {
     }
 
     show() {
-        let angle = this.velocity.heading();
-        fill(127);
-        stroke(0);
-        strokeWeight(2);
-        push();
-        translate(this.position.x, this.position.y);
-        rotate(angle);
-        beginShape();
-        vertex(this.r * 2, 0);
-        vertex(-this.r * 2, -this.r);
-        vertex(-this.r * 2, this.r);
-        endShape(CLOSE);
-        pop();
+        image(this.img, this.position.x, this.position.y);
     }
 }
