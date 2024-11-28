@@ -1,4 +1,4 @@
-class Vehicle {
+class Runner {
     constructor(x, y, maxspeed = 3, maxforce = 0.1) {
         this.acceleration = createVector(1000, 1000);
         this.velocity = createVector(1000, 1000);

@@ -1,13 +1,14 @@
-const VEHICLE_COUNT = 10;
-let vehicles = [];
+const RUNNER_COUNT = 10;
+let runners = [];
 let isMousePressed = false;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    cursor('🏁');
 
-    for (let i = 0; i < VEHICLE_COUNT; i++) {
-        let v = new Vehicle(0, i / VEHICLE_COUNT * windowHeight, 2.5 + random());
-        vehicles.push(v);
+    for (let i = 0; i < RUNNER_COUNT; i++) {
+        let r = new Runner(0, i / RUNNER_COUNT * windowHeight, 2.5 + random());
+        runners.push(r);
     }
 
     circle(windowWidth / 2, windowHeight / 2, 20);
@@ -20,21 +21,27 @@ function draw() {
     fill(127);
     stroke(0);
     strokeWeight(2);
-    circle(mouse.x, mouse.y, 20);
 
     if (isMousePressed) {
-        for (let vehicle of vehicles) {
-            vehicle.arrive(mouse);
-            vehicle.update();
-            vehicle.show();
+        for (let runner of runners) {
+            runner.arrive(mouse);
+            runner.update();
+            runner.show();
         }
     } else {
-        for (let vehicle of vehicles) {
-            vehicle.show();
+        for (let runner of runners) {
+            runner.show();
         }
     }
 }
 
 function mousePressed() {
+    if (isMousePressed) {
+        cursor('/assets/stop.png');
+        // cursor('https://avatars0.githubusercontent.com/u/1617169?s=16');
+    } else {
+
+        cursor('assets/finish.png');
+    }
     isMousePressed = !isMousePressed;
 }
