@@ -34,8 +34,8 @@ jobs:
             npm i
             npm run build
             # Move all files in build folder one level up
-            cp -a build/* .
-            rm -rf build
+            mv build/* .
+            # rm -rf build
             cd -
           fi
         done
