@@ -13,7 +13,7 @@ const PaintDryingTracker = () => {
   const [temperature, setTemperature] = useState(75);
 
   const audioRef = useRef(new Audio('./jeopardy.mp3'));
-  audioRef.current.volume = 2 / 1000;
+  audioRef.current.volume = 20 / 1000;
   audioRef.current.loop = true;
 
 
