@@ -99,102 +99,103 @@ const PaintDryingTracker = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg space-y-4 text-center">
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="max-w-md md:w-1/2 lg:w-1/3 p-6 bg-white rounded-xl shadow-lg space-y-4 text-center">
+        <h1 className="text-2xl font-bold text-gray-800">
+          🎨 Paint Drying Tracker 🖌️
+        </h1>
 
-      <h1 className="text-2xl font-bold text-gray-800">
-        🎨 Paint Drying Tracker 🖌️
-      </h1>
+        <button
+          onClick={toggleMusic}
+          className={`absolute top-4 right-4 p-2 rounded-full 
+            ${isTracking ? 'hover:bg-gray-200' : 'opacity-50 cursor-not-allowed'}`}
+        >
+          {playMusic ? <Volume2 size={24} /> : <VolumeX size={24} />}
+        </button>
 
-      <button
-        onClick={toggleMusic}
-        className={`absolute top-4 right-4 p-2 rounded-full 
-          ${isTracking ? 'hover:bg-gray-200' : 'opacity-50 cursor-not-allowed'}`}
-      >
-        {playMusic ? <Volume2 size={24} /> : <VolumeX size={24} />}
-      </button>
-
-      <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-        <div
-          className="bg-blue-600 h-4 rounded-full transition-all duration-500"
-          style={{ width: `${dryingProgress}%` }}
-        ></div>
-      </div>
-
-
-      <div className="text-xl font-semibold mb-4">
-        {getStatusMessage()}
-      </div>
-
-
-      <div className="flex justify-center items-center space-x-4">
-        <div>
-          {!isTracking ? (
-            <button
-              onClick={() => setIsTracking(true)}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Start Painting
-            </button>
-          ) : (
-            <button
-              onClick={resetTracking}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Reset Painting
-            </button>
-          )}
+        <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
+          <div
+            className="bg-blue-600 h-4 rounded-full transition-all duration-500"
+            style={{ width: `${dryingProgress}%` }}
+          ></div>
         </div>
-        <div className="flex flex-col items-center">
-          <input
-            type="color"
-            disabled={isTracking}
-            onChange={(e) => setPaintColor(e.target.value)}
-            className="w-20 h-10 cursor-pointer rounded border border-gray-300"
-            title="Choose paint color"
-            value={paintColor}
-          />
+
+
+        <div className="text-xl font-semibold mb-4">
+          {getStatusMessage()}
         </div>
-      </div>
 
 
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <div className="flex items-center justify-center">
-          <Thermometer className="mr-2" />
-          <input
-            type="number"
-            value={temperature}
-            disabled={isTracking}
-            onChange={(e) => setTemperature(Number(e.target.value))}
-            className="w-20 px-2 py-1 border rounded"
-            placeholder="Temp (°F)"
-            min="0"
-            max="150"
-          />
-
+        <div className="flex justify-center items-center space-x-4">
+          <div>
+            {!isTracking ? (
+              <button
+                onClick={() => setIsTracking(true)}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              >
+                Start Painting
+              </button>
+            ) : (
+              <button
+                onClick={resetTracking}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Reset Painting
+              </button>
+            )}
+          </div>
+          <div className="flex flex-col items-center">
+            <input
+              type="color"
+              disabled={isTracking}
+              onChange={(e) => setPaintColor(e.target.value)}
+              className="w-20 h-10 cursor-pointer rounded border border-gray-300"
+              title="Choose paint color"
+              value={paintColor}
+            />
+          </div>
         </div>
-        <div className="flex items-center justify-center">
-          <Droplet className="mr-2" />
-          <input
-            type="number"
-            value={humidity}
-            disabled={isTracking}
-            onChange={(e) => setHumidity(Number(e.target.value))}
-            className="w-20 px-2 py-1 border rounded"
-            placeholder="Humidity %"
-            min="0"
-            max="100"
-          />
-        </div>
-      </div>
 
 
-      <div className="mt-4 text-gray-600">
-        <div className="flex items-center justify-center">
-          <Timer className="mr-2" />
-          <span>Elapsed Time: {Math.floor(elapsedTime)} seconds</span>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="flex items-center justify-center">
+            <Thermometer className="mr-2" />
+            <input
+              type="number"
+              value={temperature}
+              disabled={isTracking}
+              onChange={(e) => setTemperature(Number(e.target.value))}
+              className="w-20 px-2 py-1 border rounded"
+              placeholder="Temp (°F)"
+              min="0"
+              max="150"
+            />
+
+          </div>
+          <div className="flex items-center justify-center">
+            <Droplet className="mr-2" />
+            <input
+              type="number"
+              value={humidity}
+              disabled={isTracking}
+              onChange={(e) => setHumidity(Number(e.target.value))}
+              className="w-20 px-2 py-1 border rounded"
+              placeholder="Humidity %"
+              min="0"
+              max="100"
+            />
+          </div>
         </div>
-        <div className="mt-2">
-          Total Drying Time: {totalDryingTime} Seconds
+
+
+        <div className="mt-4 text-gray-600">
+          <div className="flex items-center justify-center">
+            <Timer className="mr-2" />
+            <span>Elapsed Time: {Math.floor(elapsedTime)} seconds</span>
+          </div>
+          <div className="mt-2">
+            Total Drying Time: {totalDryingTime} Seconds
+          </div>
         </div>
       </div>
     </div>
