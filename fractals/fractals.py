@@ -4,8 +4,8 @@ import math
 from random import choice, randint
 
 # Screen Configuration
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1600
+SCREEN_HEIGHT = 1000
 SCREEN_TITLE = "Dynamic Fractal Tree"
 
 # Colors
@@ -15,21 +15,21 @@ BRANCH_BASE_COLOR = (139, 69, 19)  # Brown for the base
 LEAF_COLOR = (25, 255, 25)
 
 AUTUMN_LEAF_COLORS = [
-    (210, 105, 30),    # Burnt Orange
-    (255, 140, 0),     # Dark Orange
-    (184, 134, 11),    # Dark Goldenrod
-    (139, 69, 19),     # Saddle Brown
-    (218, 165, 32),    # Goldenrod
-    (244, 164, 96),    # Sandy Brown
-    (205, 92, 92),     # Indian Red
-    (188, 143, 143),   # Rosy Brown
-    (160, 82, 45),     # Sienna
-    (165, 42, 42),     # Brown
-    (222, 184, 135),   # Burlywood
-    (245, 222, 179),   # Wheat
-    (255, 228, 181),   # Moccasin
-    (255, 160, 122),   # Light Salmon
-    (233, 150, 122)    # Dark Salmon
+    (210, 105, 30),  # Burnt Orange
+    (255, 140, 0),  # Dark Orange
+    (184, 134, 11),  # Dark Goldenrod
+    (139, 69, 19),  # Saddle Brown
+    (218, 165, 32),  # Goldenrod
+    (244, 164, 96),  # Sandy Brown
+    (205, 92, 92),  # Indian Red
+    (188, 143, 143),  # Rosy Brown
+    (160, 82, 45),  # Sienna
+    (165, 42, 42),  # Brown
+    (222, 184, 135),  # Burlywood
+    (245, 222, 179),  # Wheat
+    (255, 228, 181),  # Moccasin
+    (255, 160, 122),  # Light Salmon
+    (233, 150, 122),  # Dark Salmon
 ]
 
 
@@ -51,7 +51,7 @@ class Branch:
 
         end_x: float
         end_y: float
-        
+
         end_x = start_point[0] + length * math.sin(angle)
         end_y = start_point[1] - length * math.cos(angle)
 
@@ -68,8 +68,10 @@ class Branch:
         :param screen: Pygame screen surface
         """
         color = BRANCH_BASE_COLOR
-        
-        pygame.draw.line(screen, color, self.start_point, self.end_point, max(1, int(6 - self.depth)))
+
+        pygame.draw.line(
+            screen, color, self.start_point, self.end_point, max(1, int(6 - self.depth))
+        )
         if self.is_leaf() and self.depth > 4:
             if self.depth > 6:
                 # seed(str(self.end_point))
@@ -90,23 +92,25 @@ class Branch:
     def is_leaf(self) -> bool:
         return not (self.right_branch and self.left_branch)
 
-    def grow_branches(self, left_angle_delta=math.pi/6, right_angle_delta=math.pi/4):
+    def grow_branches(self):
         """
         Create child branches
 
         :param left_angle_delta: angle for left branch
         :param right_angle_delta: angle for right branch
         """
-        # Only grow if not already grown and depth is not too high
+
+        offset = randint(2, 8)
+
+        left_angle_delta = math.pi / offset
+        right_angle_delta = math.pi / (10 - offset)
+
         if not self.left_branch:
             # Create left branch
             left_length = self.length * 0.85
             left_angle = self.angle - left_angle_delta
             self.left_branch = Branch(
-                self.end_point,
-                left_length,
-                left_angle,
-                self.depth + 1
+                self.end_point, left_length, left_angle, self.depth + 1
             )
 
         if not self.right_branch:
@@ -114,10 +118,7 @@ class Branch:
             right_length = self.length * 0.85
             right_angle = self.angle + right_angle_delta
             self.right_branch = Branch(
-                self.end_point,
-                right_length,
-                right_angle,
-                self.depth + 1
+                self.end_point, right_length, right_angle, self.depth + 1
             )
 
     def prune_branches(self):
@@ -143,6 +144,7 @@ class Branch:
 
         return max_depth
 
+
 class FractalTreeGame:
     def __init__(self):
         pygame.init()
@@ -151,13 +153,7 @@ class FractalTreeGame:
         self.clock = pygame.time.Clock()
 
         # Create initial tree trunk
-        self.trunk = Branch(
-            (SCREEN_WIDTH // 2, SCREEN_HEIGHT),
-            150,
-            0,
-            0,
-            trunk=True
-        )
+        self.trunk = Branch((SCREEN_WIDTH // 2, SCREEN_HEIGHT), 150, 0, 0, trunk=True)
 
         self.font = pygame.font.Font(None, 75)
 
@@ -229,10 +225,7 @@ class FractalTreeGame:
         text_height = text_surface.get_height()
 
         # Position in top right corner with a small margin
-        position = (
-            0,  # 10 pixel margin from right
-            10  # 10 pixel margin from top
-        )
+        position = (0, 10)  # 10 pixel margin from right  # 10 pixel margin from top
 
         # Draw the text
         self.screen.blit(text_surface, position)
@@ -249,9 +242,11 @@ class FractalTreeGame:
         # Update display
         pygame.display.flip()
 
+
 def main():
     game = FractalTreeGame()
     game.run()
+
 
 if __name__ == "__main__":
     main()
