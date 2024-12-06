@@ -1,4 +1,5 @@
 import pygame
+import asyncio
 import sys
 import math
 from random import choice, randint
@@ -62,11 +63,6 @@ class Branch:
         self.right_branch = None
 
     def draw(self, screen):
-        """
-        Draw the branch on the screen
-
-        :param screen: Pygame screen surface
-        """
         color = BRANCH_BASE_COLOR
 
         pygame.draw.line(
@@ -162,6 +158,7 @@ class FractalTreeGame:
             if self.handle_events() or self.trunk.get_max_depth() == 0:
                 self.draw()
             self.clock.tick(60)
+            asyncio.sleep(0)
 
     def handle_events(self):
         for event in pygame.event.get():
@@ -243,10 +240,10 @@ class FractalTreeGame:
         pygame.display.flip()
 
 
-def main():
+async def main():
     game = FractalTreeGame()
     game.run()
 
 
-if __name__ == "__main__":
-    main()
+
+asyncio.run(main())
