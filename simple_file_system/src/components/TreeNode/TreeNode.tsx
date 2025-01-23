@@ -13,8 +13,11 @@ const TreeNode = ({ node, onFileClick }: TreeNodeProps) => {
             <li className="file-node">
                 <a
                     className="file-link"
-                    rel="noopener noreferrer"
-                    onClick={() => onFileClick(node)}
+                    href="#"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onFileClick(node);
+                    }}
                 >
                     {node.title}
                 </a>
@@ -23,7 +26,7 @@ const TreeNode = ({ node, onFileClick }: TreeNodeProps) => {
     } else if (node.type === 'folder') {
         return (
             <li className="folder-node">
-                <span>{node.name + '\\'}</span>
+                <span>{`${node.name}\\`}</span>
                 <ul>
                     {Object.entries(node.children).map(([childName, childNode]) => (
                         <TreeNode
