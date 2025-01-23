@@ -8,7 +8,7 @@ const handleError = (error: Error) => {
 
 const fetchFileList = async () => {
     try {
-        const jsonPath = 'https://zrw71viyknudgyng.public.blob.vercel-storage.com/' + process.env.REACT_APP_DATA_PATH;
+        const jsonPath = 'https://zrw71viyknudgyng.public.blob.vercel-storage.com/documents-stcJc3xBHnkt9rqO6P6ReCsp1Bq0Eh.json';
         const response = await fetch(jsonPath);
         if (!response.ok) {
             handleError(new Error(`HTTP error. status: ${response.status}`));
